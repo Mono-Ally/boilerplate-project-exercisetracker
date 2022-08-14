@@ -31,19 +31,16 @@ app.post("/api/users", async function(req,res){
   res.json(newUser);
 });
 
-const findAllUsers = (done) => {userModel.find({}, function(err, users){
-  if(err) return console.log(err);
-  console.log(users);
-  done(null , users);
-}) 
-};
-
 app.get("/api/users", async function (req,res,next){
-  let users = findAllUsers();
   next();
 }, async function (req,res){
-  res.json();
-});
+  userModel.find({})
+      .then((data) => {
+        console.log(data);
+        res.json(data);
+      })
+      .catch((err) => res.json({ message: 'Belum ada data' }));
+  });
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
